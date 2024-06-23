@@ -1,25 +1,25 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import os
 
-def visualize_npy_file(npy_path):
-    mask = np.load(npy_path)
+def visualize_npy(file_path):
+    data = np.load(file_path)
+
+    print(f"Shape of the data: {data.shape}")
     
+    x_dim, y_dim, z_dim = data.shape
 
-    z_dim, x_dim, y_dim = mask.shape
+    print(f"X dimension size: {x_dim}")
+    print(f"Y dimension size: {y_dim}")
+    print(f"Z dimension size: {z_dim}")
 
-    start_slice = 20
-    end_slice = 38
-
-    fig, axes = plt.subplots(nrows=1, ncols=end_slice - start_slice, figsize=(20, 10))
-    
-    for i, ax in enumerate(axes):
-        slice_index = start_slice + i
-        ax.imshow(mask[slice_index, :, :], cmap='gray')
-        ax.set_title(f'Slice {slice_index}')
-        ax.axis('off')
+    fig, axes = plt.subplots(1, 5, figsize=(15, 5))
+    for i in range(5):
+        slice_idx = i * 10
+        axes[i].imshow(data[:, :, slice_idx], cmap='gray')
+        axes[i].set_title(f'Slice {slice_idx}')
+        axes[i].axis('off')
     
     plt.show()
 
-npy_file_path = '/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/contour_pre/VA11_pre_prim.npy' # Replace with your .npy file path
-visualize_npy_file(npy_file_path)
+npy_file_path = '/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/numpy_files_4/UM46_pre_prim.npy'  # Replace with your actual npy file path
+visualize_npy(npy_file_path)
