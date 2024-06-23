@@ -7,7 +7,7 @@ def load_roi_mask(voi_path, save_path, image_size_dict):
     :param voi_path: path of txt format voi
     :param save_path: file path to save voi in numpy format
     :param image_size_dict: dictionary with patient names as keys and (x_dim, y_dim, z_dim) as values
-    :return: numpy array, mask of shape (z_dim, x_dim, y_dim)
+    :return: numpy array, mask of shape (x_dim, y_dim, z_dim)
     '''
     patient_prefix = os.path.basename(voi_path)[:4]
     if patient_prefix not in image_size_dict:
@@ -19,7 +19,7 @@ def load_roi_mask(voi_path, save_path, image_size_dict):
     input_data = pd.read_csv(voi_path, sep=' ', header=None)  # read the input data from the txt file
     input_data = input_data.values  # convert the dataframe to numpy array
 
-    mask = np.zeros((z_dim, x_dim, y_dim))  # create a zero mask of shape (z_dim, x_dim, y_dim)
+    mask = np.zeros((x_dim, y_dim, z_dim))  # create a zero mask of shape (x_dim, y_dim, z_dim)
 
     file_out_of_bounds = False
 
@@ -33,7 +33,7 @@ def load_roi_mask(voi_path, save_path, image_size_dict):
                 file_out_of_bounds = True
 
             if 0 <= z_index < z_dim and 0 <= x_index < x_dim and 0 <= y_index < y_dim:
-                mask[z_index, x_index, y_index] = 1
+                mask[x_index, y_index, z_index] = 1
 
         except IndexError as e:
             print(f"IndexError at row {i}: {e}")
@@ -57,12 +57,12 @@ def process_all_files(input_dir, output_dir, image_size_dict):
             load_roi_mask(voi_path, save_path, image_size_dict)
             print(f"Processed {filename} and saved to {save_path}")
 
-input_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/segmentation_pre/'  # replace with your input folder path
-output_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/contour_pre/'  # replace with your output folder path
+input_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/segmentation_pre'  # replace with your input folder path
+output_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/numpy_files_4'  # replace with your output folder path
 
-# read the image sizes and voxel sizes from csv file
-df = pd.read_csv('/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/image_size.csv')  # 请替换为包含图像大小信息的csv文件路径
+df = pd.read_csv('image_size.csv') 
 image_size_dict = df.set_index(df['Patient'].str[:4])['Image Size'].to_dict()
+
 image_size_dict = {k: tuple(map(int, v.strip('()').replace(' ', '').split(',')))[:3] for k, v in image_size_dict.items()}
 
 process_all_files(input_directory, output_directory, image_size_dict)
