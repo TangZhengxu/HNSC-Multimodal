@@ -44,7 +44,7 @@ def load_roi_mask(voi_path, save_path, image_size_dict):
         print(f"File {os.path.basename(voi_path)} has indices out of bounds.")
 
     np.save(save_path, mask.astype(bool))  # save the mask as a numpy array in boolean format
-    return mask  # return the mask array
+    return mask  
 
 def process_all_files(input_dir, output_dir, image_size_dict):
     if not os.path.exists(output_dir):
@@ -57,8 +57,8 @@ def process_all_files(input_dir, output_dir, image_size_dict):
             load_roi_mask(voi_path, save_path, image_size_dict)
             print(f"Processed {filename} and saved to {save_path}")
 
-input_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/segmentation_pre'  # replace with your input folder path
-output_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/numpy_files_4'  # replace with your output folder path
+input_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/segmentation_pre'  
+output_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/private_data_head_neck/numpy_files_4' 
 
 df = pd.read_csv('image_size.csv') 
 image_size_dict = df.set_index(df['Patient'].str[:4])['Image Size'].to_dict()
