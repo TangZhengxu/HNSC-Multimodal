@@ -17,14 +17,13 @@ def save_nii(image, file_path):
     sitk.WriteImage(image, file_path)
 
 def process_data(image):
-    # Convert the SimpleITK image to a numpy array
     data = sitk.GetArrayFromImage(image)
 
-    # Perform the transformation: rotate 90 degrees counterclockwise and then flip along the y-axis
+    # rotate 90 degrees counterclockwise and then flip along the y-axis
     data_rotated = np.rot90(data, k=1, axes=(1, 2))
     data_flipped = np.flip(data_rotated, axis=1)
 
-    # Convert the numpy array back to a SimpleITK image
+    # Convert the numpy array back 
     processed_image = sitk.GetImageFromArray(data_flipped)
 
     # Copy the original image metadata (spacing, origin, direction) to the processed image
@@ -58,7 +57,6 @@ def process_all_files(input_dir, output_dir):
                 print(f"Failed to process {filename}: {e}")
 
 # Example usage
-input_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/resample/pre_t1_incorrect_direction'   # Replace with your actual input folder path
-output_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/resample/pre_t1_rotate'  # Replace with your desired output folder path
-
+input_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/resample/pre_t1_incorrect_direction'  
+output_directory = '/RadOnc-MRI1/Student_Folder/tangzx/Data/resample/pre_t1_rotate'  
 process_all_files(input_directory, output_directory)
